@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 
+app.use(express.json());
+
 let notes = [
   {
     id: 1,
@@ -40,6 +42,24 @@ app.get("/api/notes/:id", (req, res) => {
   }
 });
 
+app.post("/api/notes", (req, res) => {
+  const body = req.body;
+  const maxId = generateId();
+  if (!body.content) {
+    return res.status(400).json({ error: "content missing" });
+  }
+  const newNote = {
+    id: Number(maxId + 1),
+    content: body.content,
+    date: new Date().toDateString(),
+    important: body.important || false,
+  };
+
+  notes = notes.concat(newNote);
+  console.log(newNote);
+  res.json(newNote);
+});
+
 app.delete("/api/notes/:id", (req, res) => {
   const id = Number(req.params.id);
   notes = notes.filter((note) => note.id !== id);
@@ -50,3 +70,8 @@ const port = 3001;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
+
+const generateId = () => {
+  const maxId = notes.length > 0 ? Math.max(...notes.map((n) => n.id)) : 0;
+  return maxId + 1;
+};
