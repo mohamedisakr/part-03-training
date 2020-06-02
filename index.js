@@ -36,8 +36,14 @@ app.get("/api/notes/:id", (req, res) => {
   if (note) {
     res.json(note);
   } else {
-    res.status(404).end();
+    res.status(404).send(`Note with id ${id} does not exist`);
   }
+});
+
+app.delete("/api/notes/:id", (req, res) => {
+  const id = Number(req.params.id);
+  notes = notes.filter((note) => note.id !== id);
+  res.status(204).end();
 });
 
 const port = 3001;
