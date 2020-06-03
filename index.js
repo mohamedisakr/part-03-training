@@ -25,35 +25,37 @@ app.get("/api/notes/:id", (req, res) => {
 
 app.post("/api/notes", (req, res) => {
   const body = req.body;
-  const maxId = generateId();
+
   if (body.content === undefined) {
     return res.status(400).json({ error: "content missing" });
   }
+
   const newNote = new Note({
-    id: Number(maxId + 1),
     content: body.content,
-    date: new Date().toDateString(),
+    date: new Date(),
     important: body.important || false,
   });
 
   newNote.save().then((savedNote) => res.json(savedNote));
 });
 
+/*
 app.delete("/api/notes/:id", (req, res) => {
   const id = Number(req.params.id);
   notes = notes.filter((note) => note.id !== id);
   res.status(204).end();
 });
+*/
 
 const PORT = process.env.PORT; ///3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-const generateId = () => {
-  const maxId = notes.length > 0 ? Math.max(...notes.map((n) => n.id)) : 0;
-  return maxId + 1;
-};
+// const generateId = () => {
+//   const maxId = notes.length > 0 ? Math.max(...notes.map((n) => n.id)) : 0;
+//   return maxId + 1;
+// };
 
 /*
 let notes = [
