@@ -20,31 +20,23 @@ app.get("/api/notes", (req, res) => {
 
 app.get("/api/notes/:id", (req, res) => {
   const id = req.params.id;
-  const note = Note.findById(id).then((note) => note);
-  // const note = notes.find((note) => note.id === id);
-  if (note) {
-    res.json(note);
-  } else {
-    res.status(404).send(`Note with id ${id} does not exist`);
-  }
+  const note = Note.findById(id).then((note) => res.json(note));
 });
 
 app.post("/api/notes", (req, res) => {
   const body = req.body;
   const maxId = generateId();
-  if (!body.content) {
+  if (body.content === undefined) {
     return res.status(400).json({ error: "content missing" });
   }
-  const newNote = {
+  const newNote = new Note({
     id: Number(maxId + 1),
     content: body.content,
     date: new Date().toDateString(),
     important: body.important || false,
-  };
+  });
 
-  notes = notes.concat(newNote);
-  console.log(newNote);
-  res.json(newNote);
+  newNote.save().then((savedNote) => res.json(savedNote));
 });
 
 app.delete("/api/notes/:id", (req, res) => {
