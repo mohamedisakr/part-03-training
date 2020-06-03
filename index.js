@@ -1,40 +1,12 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const mongoose = require("mongoose");
+const Note = require("./models/note");
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
-
-// ========= mongoose  ===================
-
-const connectionString = "mongodb://localhost:27017/note-app";
-
-mongoose.connect(connectionString, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
-const schemaDefinition = { content: String, date: Date, important: Boolean };
-
-const noteSchema = new mongoose.Schema(schemaDefinition);
-
-const Note = mongoose.model("Note", noteSchema);
-
-noteSchema.set("toJSON", {
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
-    delete returnedObject._id;
-    delete returnedObject.__v;
-  },
-});
-// Note.find({}).then((result) => {
-//   result.forEach((note) => console.log(note));
-//   mongoose.connection.close();
-// });
-
-//================
 
 app.get("/", (req, res) =>
   res.send(
@@ -81,9 +53,9 @@ app.delete("/api/notes/:id", (req, res) => {
   res.status(204).end();
 });
 
-const port = 3001;
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+const PORT = process.env.PORT; ///3001;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
 
 const generateId = () => {
