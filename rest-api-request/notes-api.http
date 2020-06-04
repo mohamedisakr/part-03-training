@@ -17,4 +17,13 @@ Content-Type: {{contentType}}
     "important": true
 }
 
+### notes item put 
+PUT {{baseURL}}/api/notes/5ed7b73e347213118439180c
+Content-Type: {{contentType}}
+
+{        
+    "content": "VS Code REST client is pretty awosome",
+    "important": true
+}
+
 

@@ -49,13 +49,21 @@ app.post("/api/notes", (req, res) => {
   newNote.save().then((savedNote) => res.json(savedNote));
 });
 
-/*
-app.delete("/api/notes/:id", (req, res) => {
-  const id = Number(req.params.id);
-  notes = notes.filter((note) => note.id !== id);
-  res.status(204).end();
+app.delete("/api/notes/:id", (req, res, next) => {
+  const id = req.params.id;
+  Note.findByIdAndRemove(id)
+    .then((result) => res.status(204).end())
+    .catch((error) => next(error));
 });
-*/
+
+app.put("/api/notes/:id", (req, res, next) => {
+  const id = req.params.id;
+  const body = req.body;
+  const note = { content: body.content, important: body.important };
+  Note.findByIdAndUpdate(id, note, { new: true })
+    .then((updatedNote) => res.json(updatedNote))
+    .catch((error) => next(error));
+});
 
 /*
 const requestLogger = (request, response, next) => {
