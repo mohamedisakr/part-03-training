@@ -18,7 +18,7 @@ app.get("/api/notes", (req, res) => {
   Note.find({}).then((notes) => res.json(notes));
 });
 
-app.get("/api/notes/:id", (req, res) => {
+app.get("/api/notes/:id", (req, res, next) => {
   const id = req.params.id;
   Note.findById(id)
     .then((note) => {
@@ -28,10 +28,7 @@ app.get("/api/notes/:id", (req, res) => {
         res.status(404).end();
       }
     })
-    .catch((error) => {
-      console.log(error);
-      res.status(400).send({ error: "malformatted id" });
-    });
+    .catch((error) => next(error));
 });
 
 app.post("/api/notes", (req, res) => {
@@ -58,35 +55,17 @@ app.delete("/api/notes/:id", (req, res) => {
 });
 */
 
+const errorHandler = (error, req, res, next) => {
+  console.log(error.message);
+  if (error.name === "CastError") {
+    return res.status(400).send({ error: "malformatted id" });
+  }
+  next(error);
+};
+
+app.use(errorHandler);
+
 const PORT = process.env.PORT; ///3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
-// const generateId = () => {
-//   const maxId = notes.length > 0 ? Math.max(...notes.map((n) => n.id)) : 0;
-//   return maxId + 1;
-// };
-
-/*
-let notes = [
-  {
-    id: 1,
-    content: "HTML is easy",
-    date: "2019-05-30T17:30:31.098Z",
-    important: true,
-  },
-  {
-    id: 2,
-    content: "Browser can execute only Javascript",
-    date: "2019-05-30T18:39:34.091Z",
-    important: false,
-  },
-  {
-    id: 3,
-    content: "GET and POST are the most important methods of HTTP protocol",
-    date: "2019-05-30T19:20:14.298Z",
-    important: true,
-  },
-];
-*/
