@@ -1,17 +1,23 @@
 const mongoose = require("mongoose");
 
-const connectionString = process.env.MONGODB_URI; //"mongodb://localhost:27017/note-app";
+mongoose.set("useFindAndModify", false);
 
-mongoose
-  .connect(connectionString, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-  })
-  .then((result) => console.log("Connected to MongoDB"))
-  .catch((error) => console.log(`Error connecting to MongoDB: ${error}`));
+// const connectionString = process.env.MONGODB_URI;
 
-const schemaDefinition = { content: String, date: Date, important: Boolean };
+// mongoose
+//   .connect(connectionString, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//     useFindAndModify: false,
+//   })
+//   .then((result) => console.log("Connected to MongoDB"))
+//   .catch((error) => console.log(`Error connecting to MongoDB: ${error}`));
+
+const schemaDefinition = {
+  content: { type: String, required: true, minlength: 5 },
+  date: { type: Date, required: true },
+  important: Boolean,
+};
 
 const noteSchema = new mongoose.Schema(schemaDefinition);
 
