@@ -57,7 +57,11 @@ describe("Notes", () => {
   });
 
   test("note without content is not added", async () => {
-    const newNote = { date: new Date(), important: true };
+    const newNote = {
+      // content: "Discrete Mathematics is a must",
+      date: new Date(),
+      important: true,
+    };
     await api.post("/api/notes").send(newNote).expect(400);
 
     const notesAtEnd = await notesInDB(); //api.get("/api/notes");
@@ -70,6 +74,33 @@ describe("Notes", () => {
 
     const notesAtEnd = await notesInDB(); //api.get("/api/notes");
     expect(notesAtEnd).toHaveLength(initialNotes.length + 1);
+  });
+
+  test("a specific note can be viewed", async () => {
+    const notesAtStart = await notesInDB();
+
+    const noteToView = notesAtStart[0];
+
+    const resultNote = await api
+      .get(`/api/notes/${noteToView.id}`)
+      .expect(200)
+      .expect("Content-Type", /application\/json/);
+
+    // expect(resultNote.body).toEqual(noteToView);
+    expect(resultNote.body).toEqual(noteToView);
+  });
+
+  test("a note can be deleted", async () => {
+    const notesAtStart = await notesInDB();
+    const noteToDelete = notesAtStart[0];
+
+    await api.delete(`/api/notes/${noteToDelete.id}`).expect(204);
+
+    const notesAtEnd = await notesInDB();
+    expect(notesAtEnd).toHaveLength(initialNotes.length - 1);
+
+    const contents = notesAtEnd.map((r) => r.content);
+    expect(contents).not.toContain(noteToDelete.content);
   });
 
   afterAll(() => {
