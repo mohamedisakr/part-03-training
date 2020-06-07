@@ -28,6 +28,8 @@ Studying Deep Dive Into Modern Web Development (Full stack open 2020) @ https://
 
 ## Node Package
 
+1. node-config
+
 ## Chrome Extensions
 
 1. JSONView
