@@ -35,13 +35,13 @@ notesRouter.delete("/:id", async (req, res, next) => {
   res.status(204).end();
 });
 
-notesRouter.put("/:id", (req, res, next) => {
+notesRouter.put("/:id", async (req, res, next) => {
   const id = req.params.id;
   const body = req.body;
   const note = { content: body.content, important: body.important };
-  Note.findByIdAndUpdate(id, note, { new: true })
-    .then((updatedNote) => res.json(updatedNote.toJSON()))
-    .catch((error) => next(error));
+
+  const updatedNote = await Note.findByIdAndUpdate(id, note, { new: true });
+  res.json(updatedNote.toJSON());
 });
 
 module.exports = notesRouter;
