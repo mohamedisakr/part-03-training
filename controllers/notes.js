@@ -2,22 +2,32 @@ const notesRouter = require("express").Router();
 const Note = require("../models/note");
 
 notesRouter.get("/", async (req, res) => {
-  // Note.find({}).then((notes) => res.json(notes.map((note) => note.toJSON())))
   const notes = await Note.find({});
   res.json(notes.map((note) => note.toJSON()));
 });
 
-notesRouter.get(":id", (req, res, next) => {
+notesRouter.get("/:id", async (req, res, next) => {
   const id = req.params.id;
-  Note.findById(id)
-    .then((note) => {
-      if (note) {
-        res.json(note.toJSON());
-      } else {
-        res.status(404).end();
-      }
-    })
-    .catch((error) => next(error));
+  try {
+    const theNote = await Note.findById(id);
+    if (theNote) {
+      res.json(theNote.toJSON());
+    } else {
+      res.status(404).end();
+    }
+  } catch (error) {
+    next(error);
+  }
+
+  // Note.findById(id)
+  //   .then((note) => {
+  //     if (note) {
+  //       res.json(note.toJSON());
+  //     } else {
+  //       res.status(404).end();
+  //     }
+  //   })
+  //   .catch((error) => next(error));
 });
 
 notesRouter.post("/", (req, res, next) => {
