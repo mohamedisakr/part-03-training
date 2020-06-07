@@ -4,17 +4,9 @@ const supertest = require("supertest");
 const app = require("../app");
 const api = supertest(app);
 const Note = require("../models/note");
+const { initialNotes, nonExistingId, notesInDB } = require("./test_helper");
 
 describe("Notes", () => {
-  const initialNotes = [
-    { content: "HTML is easy", date: new Date(), important: false },
-    {
-      content: "Browser can execute only Javascript",
-      date: new Date(),
-      important: true,
-    },
-  ];
-
   beforeEach(async () => {
     await Note.deleteMany({});
 
@@ -43,9 +35,44 @@ describe("Notes", () => {
     expect(contents).toContain("Browser can execute only Javascript");
   });
 
-  afterAll(() => {
-    // console.log(mongoose.connection);
+  // add a new note and verifie that the amount of notes returned by the API increases
+  test("a valid note can be added", async () => {
+    const newNote = {
+      content: "async/await simplifies making async calls",
+      date: new Date(),
+      important: true,
+    };
 
+    await api
+      .post("/api/notes")
+      .send(newNote)
+      .expect(200)
+      .expect("Content-Type", /application\/json/);
+
+    const notesAtEnd = await notesInDB(); //api.get("/api/notes");
+    expect(notesAtEnd).toHaveLength(initialNotes.length + 1);
+
+    const contents = notesAtEnd.map((n) => n.content); //response.body.map((r) => r.content);
+    expect(contents).toContain("async/await simplifies making async calls");
+  });
+
+  test("note without content is not added", async () => {
+    const newNote = { date: new Date(), important: true };
+    await api.post("/api/notes").send(newNote).expect(400);
+
+    const notesAtEnd = await notesInDB(); //api.get("/api/notes");
+    expect(notesAtEnd).toHaveLength(initialNotes.length);
+  });
+
+  test("note without date is added", async () => {
+    const newNote = { content: "Intro to Algorithms", important: true };
+    await api.post("/api/notes").send(newNote).expect(200);
+
+    const notesAtEnd = await notesInDB(); //api.get("/api/notes");
+    expect(notesAtEnd).toHaveLength(initialNotes.length + 1);
+  });
+
+  afterAll(() => {
     mongoose.connection.close();
   });
 });
