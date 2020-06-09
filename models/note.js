@@ -6,6 +6,7 @@ const schemaDefinition = {
   content: { type: String, required: true, minlength: 5 },
   date: { type: Date, required: true },
   important: Boolean,
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 };
 
 const noteSchema = new mongoose.Schema(schemaDefinition);

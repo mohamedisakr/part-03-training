@@ -1,0 +1,30 @@
+### global variables
+@baseURL = http://localhost:3001
+@users = /api/users
+@contentType = application/json
+
+### users
+GET {{baseURL}}{{users}}
+
+### users item get 
+GET {{baseURL}}{{users}}/5ed7b73e347213118439180c
+
+### users item post 
+POST  {{baseURL}}{{users}}
+Content-Type: {{contentType}}
+
+{        
+    "content": "VS Code REST client is pretty awosome",
+    "important": true
+}
+
+### users item put 
+PUT {{baseURL}}{{users}}/5ed7b73e347213118439180c
+Content-Type: {{contentType}}
+
+{        
+    "content": "VS Code REST client is pretty awosome",
+    "important": true
+}
+
+
