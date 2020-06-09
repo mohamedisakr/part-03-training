@@ -13,8 +13,9 @@ POST  {{baseURL}}/api/notes
 Content-Type: {{contentType}}
 
 {        
-    "content": "VS Code REST client is pretty awosome",
-    "important": true
+    "content": "User id of the note creator is at the start sent along the request",
+    "important": true,
+    "userId" : "5edf56a780337216a04ed273"
 }
 
 ### notes item put 

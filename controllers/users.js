@@ -7,6 +7,16 @@ usersRouter.get("/", async (req, res) => {
   res.json(users.map((user) => user.toJSON()));
 });
 
+usersRouter.get("/:id", async (req, res) => {
+  const id = req.params.id;
+  const theUser = await User.findById(id);
+  if (theUser) {
+    res.json(theUser.toJSON());
+  } else {
+    res.status(404).end();
+  }
+});
+
 usersRouter.post("/", async (req, res) => {
   const body = req.body;
   const saltRounds = 10;

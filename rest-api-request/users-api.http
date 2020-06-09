@@ -13,9 +13,12 @@ GET {{baseURL}}{{users}}/5ed7b73e347213118439180c
 POST  {{baseURL}}{{users}}
 Content-Type: {{contentType}}
 
-{        
-    "content": "VS Code REST client is pretty awosome",
-    "important": true
+{
+    "username": "mluukkai",
+    "name": "Matti Luukkainen",
+    "password": "salainen",
+    "data": "some data",
+    "salt": 10
 }
 
 ### users item put 
