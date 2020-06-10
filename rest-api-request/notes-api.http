@@ -18,6 +18,16 @@ Content-Type: {{contentType}}
     "userId" : "5edf56a780337216a04ed273"
 }
 
+### notes item post with authorization
+POST  {{baseURL}}/api/notes
+Content-Type: {{contentType}}
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI1ZWRmNTZhNzgwMzM3MjE2YTA0ZWQyNzMiLCJpYXQiOjE1OTE3NzU0MTZ9.VjGt3dDPUr_2iIreRrCuJXlFipIR8CXtv0_-t5ZFGrw
+
+{        
+    "content": "Single Page Application use token",
+    "important": true
+}
+
 ### notes item put 
 PUT {{baseURL}}/api/notes/5ed7b73e347213118439180c
 Content-Type: {{contentType}}
